@@ -1,5 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from starlette.responses import HTMLResponse
+
+from app.http.dependencies.auth_dependency import verify_session_key
 from config.templates import templates
 from app.http.controllers.user_controller import *
 from app.models.user import *
@@ -20,9 +22,9 @@ async def read_root(request: Request):
                                       })
 
 
-@router.get("/{name}", response_class=HTMLResponse)
-async def get_user(request: Request, name: str):
-    user = await get_user_by_identifier(name)
+@router.get("/{identifier}", response_class=HTMLResponse)
+async def get_user(request: Request, identifier: str, email: str = Depends(verify_session_key)):
+    user = await get_user_by_identifier(identifier)
     return templates.TemplateResponse("user/show.html",
                                       {
                                           "request": request,

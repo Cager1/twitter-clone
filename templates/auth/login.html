@@ -68,7 +68,9 @@
                 .then(response => response.json())
                 .then(data => {
                     // Handle the response data here
-                    console.log(data);
+                    console.log('Success:', data);
+                    // redirect to the home page
+                    window.location.href = '/';
                 })
                 .catch(error => {
                     // Handle the error here

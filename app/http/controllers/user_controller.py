@@ -84,7 +84,7 @@ async def login(user, request: Request, response: Response):
     if db_user:
         if bcrypt.verify(user.password, db_user.hashed_password):
             session_key = await generate_session_key(db_user)
-            response.set_cookie(key="login", value=session_key, httponly=True, max_age=3000)
+            response.set_cookie(key="session_key", value=session_key, httponly=True, max_age=3000)
             return {"message": "Login successful"}
         else:
             return {"message": "Login failed"}

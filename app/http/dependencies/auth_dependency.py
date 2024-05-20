@@ -14,5 +14,4 @@ def verify_session_key(request: Request):
     if not email:
         raise HTTPException(status_code=401, detail="Unauthorized")
     # get user with email
-    user = db.query(User).filter(User.email == email).first()
-    return user
+    return email

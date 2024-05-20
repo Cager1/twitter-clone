@@ -1,6 +1,7 @@
 from routes.views import router as views_router
 from routes.api import router as api_router
 
+
 def initialize(app):
     print("Initializing routes...")
     initialize_routes(app)
