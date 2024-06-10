@@ -17,11 +17,11 @@ services:
       - MODULE_NAME=main  # Set this to the name of the Python file (without the .py extension) that contains your FastAPI application
       - VARIABLE_NAME=app  # Set this to the name of the FastAPI application instance in that file
       - DATABASE_URL=mysql://root:password@mysql:6306/mydatabase
-      - DATABASE_TABLE=mytable
+      - DATABASE_TABLE=twitter
       - DATABASE_HOST=mysql
-      - DATABASE_PORT=6306
+      - DATABASE_PORT=3306
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=password
+      - DATABASE_PASSWORD=root_password
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -29,16 +29,6 @@ services:
     volumes:
       - .:/app
 
-  mysql:
-    image: mysql:5.7
-    container_name: mysql-python
-    ports:
-      - "6306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
 
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
