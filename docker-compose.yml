@@ -31,11 +31,6 @@ services:
       - .:/app
 
 
-networks:
-  mynetwork:
-    external: true
-
-
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
     container_name: zookeeper
@@ -59,3 +54,7 @@ networks:
     container_name: redis
     ports:
       - "6379:6379"
+
+networks:
+  mynetwork:
+    external: true
