@@ -10,6 +10,10 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Print the MODULE_NAME and VARIABLE_NAME environment variables
+RUN echo "MODULE_NAME: $MODULE_NAME"
+RUN echo "VARIABLE_NAME: $VARIABLE_NAME"
+
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
