@@ -24,7 +24,7 @@ services:
 
   mysql:
     image: mysql:5.7
-    container_name: mysql
+    container_name: mysql-python
     ports:
       - "6306:3306"
     environment:
