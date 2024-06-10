@@ -48,12 +48,16 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     depends_on:
       - zookeeper
+    networks:
+      - mynetwork
 
   redis:
     image: redis:6.0
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:
