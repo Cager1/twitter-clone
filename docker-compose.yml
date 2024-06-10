@@ -15,7 +15,7 @@ services:
     environment:
       - MODULE_NAME=main  # Set this to the name of the Python file (without the .py extension) that contains your FastAPI application
       - VARIABLE_NAME=app  # Set this to the name of the FastAPI application instance in that file
-      - DATABASE_URL=mysql://root:password@mysql:6306/mydatabase
+      - DATABASE_URL=mysql://root:root_password@mysql:3306/twitter
       - DATABASE_TABLE=twitter
       - DATABASE_HOST=mysql
       - DATABASE_PORT=3306
