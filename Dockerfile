@@ -2,7 +2,7 @@
 FROM arm64v8/python:3.8-slim
 
 # Set the working directory in the container
-WORKDIR /myapp
+WORKDIR /app
 
 # Copy all contents from the current directory into the container at /app
 COPY . .
