@@ -86,10 +86,10 @@
 
 <script>
 
-    // function that submit new tweet on url of localhost:8000/api/tweets post
+    // function that submit new tweet on url of 158.101.164.35:8000/api/tweets post
     function submitTweet(event) {
         const tweet = document.querySelector('textarea[name="tweet"]').value;
-        fetch('http://localhost:8000/api/tweets', {
+        fetch('http://158.101.164.35:8000/api/tweets', {
             method: 'POST',
             credentials: "include",
             headers: {
@@ -106,7 +106,7 @@
         });
     }
 
-    const ws = new WebSocket("ws://localhost:8000/ws/tweets");
+    const ws = new WebSocket("ws://158.101.164.35:8000/ws/tweets");
 
     ws.onmessage = function(event) {
         const tweetList = document.getElementById('tweets');
