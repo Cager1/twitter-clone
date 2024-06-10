@@ -1,14 +1,12 @@
 from fastapi import HTTPException, Request, Response
 from passlib.hash import bcrypt
-from redis.commands.helpers import random_string
-from config.redis_config import r
+from app.http.helpers.user_helper import generate_session_key
 from database.models.user import User
 from app.http.resources.user_resource import UserResource
 from database.connection import db
+from config.redis_config import r
 
 
-
-# get all users
 async def index():
     users = db.query(User).all()
     return UserResource(users)
@@ -69,16 +67,6 @@ async def get_user_by_identifier(identifier: str):
     return UserResource(user)
 
 
-async def generate_session_key(user):
-    # generate session key, random string
-    session_key = random_string(96)
-    try:
-        r.set(session_key, user.email, ex=3000)
-    except Exception as e:
-        print(f"Error setting key in Redis: {e}")
-    return session_key
-
-
 async def login(user, request: Request, response: Response):
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
@@ -90,3 +78,14 @@ async def login(user, request: Request, response: Response):
             return {"message": "Login failed"}
     else:
         return {"message": "Login failed"}
+
+
+async def get_suggested_users():
+    users = db.query(User).limit(5).all()
+    return UserResource(users)
+
+
+async def logout(request: Request, response: Response):
+    response.delete_cookie(key="session_key")
+    r.delete(request.cookies.get("session_key"))
+    return {"message": "Logout successful"}

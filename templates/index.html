@@ -2,10 +2,154 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter-like Homepage</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>{{ title }}</h1>
-<p>{{ content }}</p>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Twitter</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Explore</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Notifications</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Messages</a>
+            </li>
+        </ul>
+        {% if user %}
+        <a href="/auth/logout" class="btn btn-outline-primary my-2 my-sm-0">Logout</a>
+        {% else %}
+        <a href="/auth/login" class="btn btn-outline-primary my-2 mr-2 my-sm-0">Login</a>
+        <a href="/auth/register" class="btn btn-outline-primary my-2 my-sm-0">Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container mt-4">
+    <div class="row">
+        <!-- Feed Section -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="form-group">
+                        <textarea class="form-control" name="tweet" rows="3" placeholder="What's happening?"></textarea>
+                    </div>
+                    <button onclick="submitTweet()" class="btn btn-primary">Tweet</button>
+                </div>
+            </div>
+
+            <!-- Tweets -->
+            <div class="card mb-4" id="tweets">
+            </div>
+        </div>
+
+        <!-- Sidebar Section -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Who to follow
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for user in suggested_users %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ user.name }}</strong><br>
+                            <small>@{{ user.identifier }}</small>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm">Follow</button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+
+    // function that submit new tweet on url of localhost:8000/api/tweets post
+    function submitTweet(event) {
+        const tweet = document.querySelector('textarea[name="tweet"]').value;
+        fetch('http://localhost:8000/api/tweets', {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tweet: tweet }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    const ws = new WebSocket("ws://localhost:8000/ws/tweets");
+
+    ws.onmessage = function(event) {
+        const tweetList = document.getElementById('tweets');
+        const tweet = JSON.parse(event.data);
+
+        // Create new tweet card
+        const newTweetCard = document.createElement('div');
+        newTweetCard.className = "card mb-4";
+
+        // Create card body
+        const cardBody = document.createElement('div');
+        cardBody.className = "card-body";
+
+        // Create card title
+        const cardTitle = document.createElement('h5');
+        cardTitle.className = "card-title";
+        cardTitle.textContent = tweet.user.name;
+
+        // Create card subtitle
+        const cardSubtitle = document.createElement('h6');
+        cardSubtitle.className = "card-subtitle mb-2 text-muted";
+        cardSubtitle.textContent = "@" + tweet.user.identifier;
+
+        // Create card text
+        const cardText = document.createElement('p');
+        cardText.className = "card-text";
+        cardText.textContent = tweet.tweet;
+
+        // Append elements to card body
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(cardSubtitle);
+        cardBody.appendChild(cardText);
+
+        // Append card body to new tweet card
+        newTweetCard.appendChild(cardBody);
+
+        // Append new tweet card to tweet list
+        tweetList.prepend(newTweetCard);
+    };
+
+    ws.onclose = function(event) {
+        console.log("WebSocket connection closed:", event);
+    };
+</script>
 </body>
 </html>

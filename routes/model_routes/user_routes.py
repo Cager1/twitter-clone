@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Request, Response
+from starlette.responses import RedirectResponse
+
 from app.http.controllers.user_controller import *
 from app.models.user import *
 router = APIRouter()
@@ -26,6 +28,8 @@ async def register(user: UserRegister):
 @router.post("/login")
 async def login_user(user: UserLogin, request: Request, response: Response):
     return await login(user, request, response)
+
+
 
 
 

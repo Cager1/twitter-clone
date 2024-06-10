@@ -1,4 +1,4 @@
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
@@ -9,13 +9,12 @@ class User(BaseModel):
     password: str
     password_confirmation: str
 
-
 class UserRegister(BaseModel):
-    name: str
-    email: str
-    password: str
+    name: str = Field(...)
+    email: str = Field(...)
+    password: str = Field(...)
     identifier: str = None
-    password_confirmation: str
+    password_confirmation: str = Field(...)
 
 
 class UserLogin(BaseModel):
