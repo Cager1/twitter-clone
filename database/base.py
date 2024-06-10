@@ -10,8 +10,10 @@ load_dotenv()
 user = os.getenv("DATABASE_USER")
 password = os.getenv("DATABASE_PASSWORD")
 table = os.getenv("DATABASE_TABLE")
+host = os.getenv("DATABASE_HOST")
+port = os.getenv("DATABASE_PORT")
 
-DATABASE_URL = f"mysql+mysqlconnector://{user}:{password}@localhost:6306/{table}"
+DATABASE_URL = f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{table}"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 session = SessionLocal()
